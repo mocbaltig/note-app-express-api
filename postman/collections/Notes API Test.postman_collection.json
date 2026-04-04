@@ -151,15 +151,14 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/notes/{{noteId}}",
+          "raw": "http://localhost:3000/notes",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "3000",
           "path": [
-            "notes",
-            "{{noteId}}"
+            "notes"
           ]
         }
       }
