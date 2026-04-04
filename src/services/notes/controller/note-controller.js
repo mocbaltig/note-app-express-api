@@ -4,7 +4,7 @@ import { InvariantError, NotFoundError } from '../../../exceptions/index.js';
 import response from '../../../utils/response.js';
 
 export const createNote = (req, res, next) => {
-  const { title = 'untitled', tags, body } = req.body;
+  const { title = 'untitled', tags, body } = req.validated;
   const id = nanoid(16);
   const ts = new Date().toISOString();
 
