@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.1.0",
     "joi": "^18.1.2",
     "nanoid": "^5.1.5"
@@ -26,5 +27,12 @@
   },
   "prettier": {
     "singleQuote": true
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/test/**",
+      "**/docs/**",
+      "**/postman/**"
+    ]
   }
 }

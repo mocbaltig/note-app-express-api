@@ -1,4 +1,4 @@
-const validate = (schema) => (req, res, next) => {
+export const validate = (schema) => (req, res, next) => {
   const { error, value } = schema.validate(req.body, {
     abortEarly: false,
     allowUnknown: false,
@@ -10,4 +10,14 @@ const validate = (schema) => (req, res, next) => {
   next();
 };
 
-export default validate;
+export const validateQuery = (schema) => (req, res, next) => {
+  const { error, value } = schema.validate(req.query, {
+    abortEarly: false,
+    allowUnkown: false,
+    stripUnknown: false,
+  });
+
+  if (error) return next(error);
+  req.validated = value;
+  next();
+};

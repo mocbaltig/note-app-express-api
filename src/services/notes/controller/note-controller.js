@@ -20,10 +20,12 @@ export const createNote = (req, res, next) => {
 };
 
 export const getNotes = (req, res) => {
-  return res.json({
-    status: 'success',
-    data: { notes },
-  });
+  const { title = '' } = req.query;
+  if (title !== '') {
+    const note = notes.filter((note) => note.title === title);
+    return response(res, 200, 'success', { notes: note });
+  }
+  return response(res, 200, 'success', { notes });
 };
 
 export const getNoteById = (req, res, next) => {
