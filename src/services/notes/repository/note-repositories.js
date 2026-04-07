@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { nanoid } from 'nanoid/non-secure';
 import { Pool } from 'pg';
 
@@ -20,8 +21,14 @@ class NoteRepositories {
     return result.rows[0];
   }
 
-  async getNotes() {
-    const result = await this.pool.query('SELECT * FROM notes');
+  async getNotes(title) {
+    const query = title
+      ? {
+          text: 'SELECT * FROM notes WHERE title = $1',
+          values: [title],
+        }
+      : 'SELECT * FROM notes';
+    const result = await this.pool.query(query);
     return result.rows;
   }
 
