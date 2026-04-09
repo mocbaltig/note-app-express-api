@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "5fe0f62e-1817-4cb6-8082-30a4c91ab943",
+    "_postman_id": "b64d5a10-7943-4aa8-aca3-ba290f0c4b58",
     "name": "Notes API Test",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -203,6 +203,15 @@
             ],
             "type": "text/javascript"
           }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
         }
       ],
       "request": {
@@ -224,6 +233,22 @@
           "port": "3000",
           "path": [
             "notes"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "Catatan A",
+              "type": "text",
+              "uuid": "8dee3135-b1cf-41d1-978e-d0dc2a0df6d7",
+              "disabled": true
+            },
+            {
+              "key": "title",
+              "value": "catatan B",
+              "type": "text",
+              "uuid": "94a8d5d1-fac6-4765-a8d1-fecdfc64c1a8",
+              "disabled": true
+            }
           ]
         }
       }
@@ -554,6 +579,393 @@
           "path": [
             "notes",
             "{{noteId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Adding User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"response status code should have 201 value\", () => {",
+              "    pm.response.to.have.status(201)",
+              "})",
+              "",
+              "pm.test('response Content-Type header should have application/json value', () => {",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "});",
+              "",
+              "pm.test('response body should be an object', () => {",
+              "    const responseJson = pm.response.json()",
+              "    pm.expect(responseJson).to.be.an('object')",
+              "});",
+              "",
+              "pm.test('response body should have the correct property and value', () => {",
+              "    const responseJson = pm.response.json()",
+              "    pm.expect(responseJson).to.ownProperty('status')",
+              "    pm.expect(responseJson.status).to.equals('success');",
+              "",
+              "    pm.expect(responseJson).to.ownProperty('message');",
+              "    pm.expect(responseJson.message).to.equals('User berhasil ditambahkan');",
+              "    ",
+              "    pm.expect(responseJson).to.ownProperty('data');",
+              "    pm.expect(responseJson.data).to.be.an('object');",
+              "});",
+              "",
+              "pm.test('response body data should have userId property and not equal to empty', () => {",
+              "    const responseJson = pm.response.json();",
+              "    const { data } = responseJson;",
+              "",
+              "    pm.expect(data).to.ownProperty('id');",
+              "    pm.expect(data.id).to.not.equals('');",
+              "    ",
+              "    pm.environment.set('currentUserId', data.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"{{$timestamp}}-{{newUsername}}\",\n    \"password\": \"{{newPassword}}\",\n    \"fullname\": \"{{newFullname}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/users",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Adding User with Exist Username",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('response status code should have 400 value', () => {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('response Content-Type header should have application/json value', () => {",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "});",
+              "",
+              "pm.test('response body should an object', () => {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.be.an('object');",
+              "});",
+              "",
+              "pm.test('response body should have correct property and value', () => {",
+              "    const responseJson = pm.response.json();",
+              "",
+              "    pm.expect(responseJson).to.ownProperty('status');",
+              "    pm.expect(responseJson.status).to.equals('failed');",
+              "    pm.expect(responseJson).to.ownProperty('message');",
+              "    pm.expect(responseJson.message).to.equals('Gagal menambahkan user. Username sudah digunakan.');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const postRequest = {",
+              "    url: 'http://localhost:3000/users',",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            username: 'testing',",
+              "            password: pm.environment.get('newPassword'),",
+              "            fullname: pm.environment.get('newFullname')",
+              "        }),",
+              "    },",
+              "};",
+              "",
+              "pm.sendRequest(postRequest, (error, response) => {",
+              "    console.log(error ? error : response.json())",
+              "})"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"testing\",\n    \"password\": \"{{newPassword}}\",\n    \"fullname\": \"{{newFullname}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/users",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Adding User with Bad User Payload",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('response status code should have 400 value', () => {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('response Content-Type header should have application/json value', () => {",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "});",
+              "",
+              "pm.test('response body should an object', () => {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.be.an('object');",
+              "});",
+              "",
+              "pm.test('response body should have correct property and value', () => {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.ownProperty('status');",
+              "    pm.expect(responseJson.status).to.equals('failed');",
+              "    pm.expect(responseJson).to.ownProperty('message');",
+              "    pm.expect(responseJson.message).to.not.equals(' ');",
+              "    pm.expect(responseJson.message).to.not.equals(null);",
+              "});",
+              "",
+              "const repeatRequestUntilDatasetEmpty = () => {",
+              "    const badUserPayloads = pm.environment.get('badUserPayloads');",
+              "",
+              "    if (badUserPayloads && badUserPayloads.length > 0) {",
+              "        pm.execution.setNextRequest('Adding User with Bad User Payload');",
+              "    }",
+              "}",
+              "",
+              "repeatRequestUntilDatasetEmpty();"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let badUserPayloads = pm.environment.get(badUserPayloads)",
+              "",
+              "if (!badUserPayloads || badUserPayloads.length === 0) {",
+              "    badUserPayloads = [",
+              "        { password: 'secret', fullname: 'John Doe' },",
+              "        { username: 1, password: 'secret', fullname: 'John Doe' },",
+              "        { username: 'johndoe', fullname: 'John Doe' },",
+              "        { username: 'johndoe', password: true, fullname: 'John Doe' },",
+              "        { username: 'johndoe', password: 'secret' },",
+              "        { username: 'johndoe', password: 'secret', fullname: 0 },",
+              "    ]",
+              "}",
+              "",
+              "const currentBadUserPayload = badUserPayloads.shift();",
+              "pm.environment.set('currentBadUserPayload', JSON.stringify(currentBadUserPayload));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{{currentBadUserPayload}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/users",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Getting User by Correct Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('response status code should have 200 value', () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('response Content-Type header should have application/json value', () => {",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "})",
+              "",
+              "pm.test('response body should be an object', () => {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.be.an('object')",
+              "});",
+              "",
+              "pm.test('response body should have the correct property and value', () => {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.ownProperty('status');",
+              "    pm.expect(responseJson.status).to.equals('success');",
+              "",
+              "    pm.expect(responseJson).to.have.ownProperty('data');",
+              "    pm.expect(responseJson.data).to.be.an('object')",
+              "});",
+              "",
+              "pm.test('response body data should contain user object', () => {",
+              "    const { data } = pm.response.json();",
+              "",
+              "    pm.expect(data).to.have.ownProperty('user');",
+              "    pm.expect(data).to.be.an('object');",
+              "});",
+              "",
+              "pm.test('user object should contain only id, username and fullname with correct value', () => {",
+              "    const { data } = pm.response.json();",
+              "",
+              "    pm.expect(data).to.have.ownProperty('id');",
+              "    pm.expect(data.id).to.equals(pm.environment.get('currentUserId'));",
+              "",
+              "    pm.expect(data).to.have.ownProperty('username');",
+              "    pm.expect(data.username).to.equals(pm.environment.get('newUsername'));",
+              "",
+              "    pm.expect(data).to.have.ownProperty('fullname');",
+              "    pm.expect(data.fullname).to.equals(pm.environment.get('newFullname'));",
+              "",
+              "    pm.expect(data).to.have.ownProperty('created_at');",
+              "    pm.expect(data).to.have.ownProperty('updated_at');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/users/{{currentUserId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users",
+            "{{currentUserId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Getting User by Incorrect Id",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('response status code should have 404 value', () => {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test('response Content-Type header should have application/json value', () => {",
+              "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "});",
+              "",
+              "pm.test('response body should have been an object', () => {",
+              "    pm.expect(pm.response.json()).to.be.an('object');",
+              "});",
+              "",
+              "pm.test('response body should have the correct property and value', () => {",
+              "    const responseJson = pm.response.json();",
+              "    ",
+              "    pm.expect(responseJson).to.have.ownProperty('status');",
+              "    pm.expect(responseJson.status).to.equals('failed');",
+              "",
+              "    pm.expect(responseJson).to.have.ownProperty('message');",
+              "    pm.expect(responseJson.message).to.equals('User tidak ditemukan');",
+              "})"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "localhost:3000/users/xxxx",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users",
+            "xxxx"
           ]
         }
       }
