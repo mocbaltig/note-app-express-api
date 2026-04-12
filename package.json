@@ -32,7 +32,8 @@
     "nodemon": "^3.1.10"
   },
   "prettier": {
-    "singleQuote": true
+    "singleQuote": true,
+    "printWidth": 90
   },
   "nodemonConfig": {
     "ignore": [
