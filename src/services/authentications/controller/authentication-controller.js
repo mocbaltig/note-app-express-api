@@ -2,20 +2,14 @@ import AuthenticationRepositories from '../repositories/authentication-repositor
 import UserRepositories from '../../users/repositories/user-repositories.js';
 import TokenManager from '../../../security/token-manager.js';
 import response from '../../../utils/response.js';
-import {
-  InvariantError,
-  AuthenticationError,
-} from '../../../exceptions/index.js';
+import { InvariantError, AuthenticationError } from '../../../exceptions/index.js';
 
 export const login = async (req, res, next) => {
   const { username, password } = req.validated;
-  const userId = await UserRepositories.verifyUserCredential(
-    username,
-    password,
-  );
+  const userId = await UserRepositories.verifyUserCredential(username, password);
 
   if (!userId) {
-    return next(new AuthenticationError('Kredensial yang Anda berikan salah'));
+    return next(new AuthenticationError('Kredensial yang anda berikan salah'));
   }
 
   const accessToken = TokenManager.generateAccessToken({ id: userId });
@@ -32,8 +26,7 @@ export const login = async (req, res, next) => {
 export const refreshToken = async (req, res, next) => {
   const { refreshToken } = req.validated;
 
-  const result =
-    await AuthenticationRepositories.verifyRefreshToken(refreshToken);
+  const result = await AuthenticationRepositories.verifyRefreshToken(refreshToken);
 
   if (!result) {
     return next(new InvariantError('Refresh token tidak valid'));
@@ -50,8 +43,7 @@ export const refreshToken = async (req, res, next) => {
 export const logout = async (req, res, next) => {
   const { refreshToken } = req.validated;
 
-  const result =
-    await AuthenticationRepositories.verifyRefreshToken(refreshToken);
+  const result = await AuthenticationRepositories.verifyRefreshToken(refreshToken);
   if (!result) {
     return next(new InvariantError('Refresh token tidak valid'));
   }
