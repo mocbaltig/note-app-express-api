@@ -1,9 +1,8 @@
 {
   "info": {
-    "_postman_id": "b64d5a10-7943-4aa8-aca3-ba290f0c4b58",
+    "_postman_id": "e1b1fab5-9942-401c-9303-6a9eaca9c27f",
     "name": "Notes API Test",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "12075191"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
@@ -66,7 +65,6 @@
           ],
           "request": {
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"username\": \"{{$timestamp}}-{{newUsername}}\",\n    \"password\": \"{{newPassword}}\",\n    \"fullname\": \"{{newFullname}}\"\n}",
@@ -86,8 +84,7 @@
                 "users"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Adding User with Exist Username",
@@ -151,7 +148,6 @@
           ],
           "request": {
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"username\": \"testing\",\n    \"password\": \"{{newPassword}}\",\n    \"fullname\": \"{{newFullname}}\"\n}",
@@ -171,8 +167,7 @@
                 "users"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Adding User with Bad User Payload",
@@ -242,7 +237,6 @@
           ],
           "request": {
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{{currentBadUserPayload}}",
@@ -262,8 +256,7 @@
                 "users"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Getting User by Correct Id",
@@ -330,12 +323,8 @@
               }
             }
           ],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "method": "GET",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "",
@@ -356,8 +345,7 @@
                 "{{currentUserId}}"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Getting User by Incorrect Id",
@@ -403,7 +391,6 @@
           ],
           "request": {
             "method": "GET",
-            "header": [],
             "url": {
               "raw": "localhost:3000/users/xxxx",
               "host": [
@@ -415,8 +402,7 @@
                 "xxxx"
               ]
             }
-          },
-          "response": []
+          }
         }
       ]
     },
@@ -504,7 +490,6 @@
           ],
           "request": {
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"username\": \"testing\",\n    \"password\": \"{{newPassword}}\"\n}",
@@ -524,8 +509,7 @@
                 "authentications"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Post Authentication with Invalid Credential",
@@ -556,7 +540,7 @@
                   "    pm.expect(responseJson).to.be.an('object')",
                   "})",
                   "",
-                  "pm.test('response boyd should have the correct property and value', () => {",
+                  "pm.test('response body should have the correct property and value', () => {",
                   "    const responseJson = pm.response.json()",
                   "",
                   "    pm.expect(responseJson).to.haveOwnProperty('status')",
@@ -571,7 +555,6 @@
           ],
           "request": {
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"username\": \"testing\",\n    \"password\": \"thispasswordisnotcorrectyo\"\n}",
@@ -591,14 +574,22 @@
                 "authentications"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Put Authentication with Valid Refresh Token",
           "event": [
             {
               "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
               "script": {
                 "exec": [
                   "pm.test('response status code should have 200 value', () => {",
@@ -637,20 +628,10 @@
                 ],
                 "type": "text/javascript"
               }
-            },
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript"
-              }
             }
           ],
           "request": {
             "method": "PUT",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
@@ -670,8 +651,7 @@
                 "authentications"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Put Authentications with Invalid Refresh Token",
@@ -693,7 +673,7 @@
                   "    pm.response.to.have.status(400)",
                   "})",
                   "",
-                  "pm.test('resopnse Content-Type header should have application/json value', () => {",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
                   "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8')",
                   "})",
                   "",
@@ -717,7 +697,6 @@
           ],
           "request": {
             "method": "PUT",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"refreshToken\": \"xxxxx\"\n}",
@@ -737,8 +716,7 @@
                 "authentications"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Delete Authentication with Valid Refresh Token",
@@ -783,7 +761,6 @@
           ],
           "request": {
             "method": "DELETE",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
@@ -803,8 +780,7 @@
                 "authentications"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Delete Authentication with Invalid Refresh Token",
@@ -849,7 +825,6 @@
           ],
           "request": {
             "method": "DELETE",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"refreshToken\": \"xxxxx\"\n}",
@@ -869,8 +844,7 @@
                 "authentications"
               ]
             }
-          },
-          "response": []
+          }
         }
       ]
     },
@@ -943,7 +917,6 @@
               ]
             },
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"title\": \"Catatan A\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari catatan A;\"\n}",
@@ -963,8 +936,7 @@
                 "notes"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Adding Notes with Bad Note Payload",
@@ -1044,7 +1016,6 @@
               ]
             },
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{{currentBadNotePayload}}",
@@ -1065,8 +1036,7 @@
                 "notes"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Get All Notes",
@@ -1119,9 +1089,6 @@
               }
             }
           ],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "auth": {
               "type": "bearer",
@@ -1134,7 +1101,6 @@
               ]
             },
             "method": "GET",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"title\": \"Catatan A\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari catatan A;\"\n}",
@@ -1168,8 +1134,7 @@
                 }
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Getting Specified Note",
@@ -1245,9 +1210,6 @@
               }
             }
           ],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "auth": {
               "type": "bearer",
@@ -1260,7 +1222,6 @@
               ]
             },
             "method": "GET",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"title\": \"Catatan A\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari catatan A;\"\n}",
@@ -1281,8 +1242,7 @@
                 "{{noteId}}"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Update Note",
@@ -1315,7 +1275,16 @@
                   "",
                   "pm.test('when request the updated note', () => {",
                   "    const noteId = pm.environment.get('noteId');",
-                  "    pm.sendRequest(`http://localhost:3000/notes/${noteId}`, (error, response) => {",
+                  "    const accessToken = pm.environment.get('accessToken')",
+                  "    const request = {",
+                  "        url: `http://localhost:3000/notes/${noteId}`,",
+                  "        method: 'GET',",
+                  "        header: {",
+                  "            'Content-Type': 'application/json',",
+                  "            'Authorization': `Bearer ${accessToken}`",
+                  "        },",
+                  "    };",
+                  "    pm.sendRequest(request, (error, response) => {",
                   "        if (!error) {",
                   "            pm.test('then the updated note should contain the latest data', () => {",
                   "                const responseJson = response.json();",
@@ -1358,7 +1327,6 @@
               ]
             },
             "method": "PUT",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"title\": \"Catatan A Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan A Revised\"\n}",
@@ -1379,8 +1347,7 @@
                 "{{noteId}}"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Update Note with Bad Note Payload",
@@ -1461,7 +1428,6 @@
               ]
             },
             "method": "PUT",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{{currentBadNotePayload}}",
@@ -1483,8 +1449,7 @@
                 "{{noteId}}"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Delete Note",
@@ -1517,7 +1482,16 @@
                   "",
                   "pm.test('when request the updated note', () => {",
                   "    const noteId = pm.environment.get('noteId');",
-                  "    pm.sendRequest(`http://localhost:3000/notes/${noteId}`, (error, response) => {",
+                  "    const accessToken = pm.environment.get('accessToken')",
+                  "    const request = {",
+                  "        url: `http://localhost:3000/notes/${noteId}`,",
+                  "        method: 'GET',",
+                  "        header: {",
+                  "            'Content-Type': 'application/json',",
+                  "            'Authorization': `Bearer ${accessToken}`",
+                  "        },",
+                  "    };",
+                  "    pm.sendRequest(request, (error, response) => {",
                   "        if (!error) {",
                   "            pm.test('the deleted note should be not found', () => {",
                   "                pm.expect(response.code).to.equals(404);",
@@ -1555,7 +1529,6 @@
               ]
             },
             "method": "DELETE",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"title\": \"Catatan A edited\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari catatan edited\"\n}",
@@ -1576,8 +1549,7 @@
                 "{{noteId}}"
               ]
             }
-          },
-          "response": []
+          }
         },
         {
           "name": "Getting All Notes without Access Token",
@@ -1609,7 +1581,6 @@
           ],
           "request": {
             "method": "GET",
-            "header": [],
             "url": {
               "raw": "localhost:3000/notes",
               "host": [
@@ -1620,8 +1591,7 @@
                 "notes"
               ]
             }
-          },
-          "response": []
+          }
         }
       ]
     }
