@@ -1594,6 +1594,979 @@
           }
         }
       ]
+    },
+    {
+      "name": "Authorizations",
+      "item": [
+        {
+          "name": "Adding Notes using User A",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 201 (created) value', () => {",
+                  "    pm.response.to.have.status(201)",
+                  "})",
+                  "",
+                  "pm.test('response Content-Type should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8')",
+                  "})",
+                  "",
+                  "pm.test('response body should have noteId in data object', () => {",
+                  "    const responseJson = pm.response.json()",
+                  "    pm.expect(responseJson).to.be.an('object')",
+                  "",
+                  "    pm.expect(responseJson).to.ownProperty('data')",
+                  "    pm.expect(responseJson.data).to.be.an('object')",
+                  "",
+                  "    pm.expect(responseJson.data).to.ownProperty('noteId')",
+                  "    pm.expect(responseJson.data.noteId).to.be.a('string')",
+                  "",
+                  "    // insert noteId to noteIdUserA env var",
+                  "    pm.environment.set('noteIdUserA', responseJson.data.noteId)",
+                  "})"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserA}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan A\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari catatan A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Adding Notes using User B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 201 (created) value', () => {",
+                  "    pm.response.to.have.status(201)",
+                  "})",
+                  "",
+                  "pm.test('response Content-Type should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8')",
+                  "})",
+                  "",
+                  "pm.test('response body should have noteId in data object', () => {",
+                  "    const responseJson = pm.response.json()",
+                  "    pm.expect(responseJson).to.be.an('object')",
+                  "",
+                  "    pm.expect(responseJson).to.ownProperty('data')",
+                  "    pm.expect(responseJson.data).to.be.an('object')",
+                  "",
+                  "    pm.expect(responseJson.data).to.ownProperty('noteId')",
+                  "    pm.expect(responseJson.data.noteId).to.be.a('string')",
+                  "",
+                  "    // insert noteId to noteIdUserB env var",
+                  "    pm.environment.set('noteIdUserB', responseJson.data.noteId)",
+                  "})"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserB}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan B\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari catatan B\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting All Notes using User A",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should contains notes array with 1 item', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "    pm.expect(responseJson).to.have.ownProperty('data');",
+                  "    pm.expect(responseJson.data).to.be.an('object');",
+                  "    pm.expect(responseJson.data).to.have.ownProperty('notes');",
+                  "    pm.expect(responseJson.data.notes).to.be.an('array');",
+                  "    pm.expect(responseJson.data.notes).to.have.lengthOf(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserA}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "localhost:3000/notes",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting All Notes using User B",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should contains notes array with 1 item', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "    pm.expect(responseJson).to.have.ownProperty('data');",
+                  "    pm.expect(responseJson.data).to.be.an('object');",
+                  "    pm.expect(responseJson.data).to.have.ownProperty('notes');",
+                  "    pm.expect(responseJson.data.notes).to.be.an('array');",
+                  "    pm.expect(responseJson.data.notes).to.have.lengthOf(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserB}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "localhost:3000/notes",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting Note Owned by User A using User A",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should contains object note', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('data');",
+                  "    pm.expect(responseJson.data).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson.data).to.have.ownProperty('note');",
+                  "    pm.expect(responseJson.data.note).to.be.an('object');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserA}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserA}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting Note Owned by User B using User B",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should contains object note', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('data');",
+                  "    pm.expect(responseJson.data).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson.data).to.have.ownProperty('note');",
+                  "    pm.expect(responseJson.data.note).to.be.an('object');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserB}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserB}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserB}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting Note Owned by User A using User B",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should contain correct value', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('status');",
+                  "    pm.expect(responseJson.status).to.equals('fail');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('message');",
+                  "    pm.expect(responseJson.message).to.equals('Anda tidak berhak mengakses resource ini');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserB}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserA}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Note Owned by User A using User A",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserA}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan A Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan A Revised\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserA}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Note Owned by User B using User B",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserB}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan B Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan B Revised\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserB}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserB}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Note Owned by User A using User B",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body should contain correct value', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('status');",
+                  "    pm.expect(responseJson.status).to.equals('fail');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('message');",
+                  "    pm.expect(responseJson.message).to.equals('Anda tidak berhak mengakses resource ini');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserB}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan B Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan B Revised\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserA}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Note Owned by User A using User B",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body should contain correct value', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('status');",
+                  "    pm.expect(responseJson.status).to.equals('fail');",
+                  "    ",
+                  "    pm.expect(responseJson).to.have.ownProperty('message');",
+                  "    pm.expect(responseJson.message).to.equals('Anda tidak berhak mengakses resource ini');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserB}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan B Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan B Revised\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserA}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Note Owned by User A using User A",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserA}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan B Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan B Revised\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserA}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserA}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Note Owned by User B using User B",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessTokenUserB}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan B Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan B Revised\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes/{{noteIdUserB}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{noteIdUserB}}"
+              ]
+            }
+          }
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// create user A",
+              "const createUserARequest = {",
+              "    url: 'http://localhost:3000/users',",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            username: 'user_a',",
+              "            password: 'secret',",
+              "            fullname: 'User A',",
+              "        }),",
+              "    },",
+              "};",
+              "",
+              "pm.sendRequest(createUserARequest, (err, res) => {",
+              "    console.log(err ? err : res)",
+              "    // after registered/created, login with User A",
+              "    const loginUserRequest = {",
+              "        url: 'http://localhost:3000/authentications',",
+              "        method: 'POST',",
+              "        header: {",
+              "            'Content-Type': 'application/json',",
+              "        },",
+              "        body: {",
+              "            mode: 'raw',",
+              "            raw: JSON.stringify({",
+              "                username: 'user_a',",
+              "                password: 'secret',",
+              "            }),",
+              "        }",
+              "    };",
+              "",
+              "    pm.sendRequest(loginUserRequest, (err, res) => {",
+              "        if (!err) {",
+              "            // insert access token of User A to accessTokenUserA env var",
+              "            const { data: { accessToken } } = res.json();",
+              "            pm.environment.set('accessTokenUserA', accessToken)",
+              "        }",
+              "    })",
+              "})",
+              "",
+              "// create user B",
+              "const createUserBRequest = {",
+              "    url: 'http://localhost:3000/users',",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            username: 'user_b',",
+              "            password: 'secret',",
+              "            fullname: 'User B',",
+              "        }),",
+              "    },",
+              "};",
+              "",
+              "pm.sendRequest(createUserARequest, (err, res) => {",
+              "    console.log(err ? err : res)",
+              "    // after registered/created, login with User B",
+              "    const loginUserRequest = {",
+              "        url: 'http://localhost:3000/authentications',",
+              "        method: 'POST',",
+              "        header: {",
+              "            'Content-Type': 'application/json',",
+              "        },",
+              "        body: {",
+              "            mode: 'raw',",
+              "            raw: JSON.stringify({",
+              "                username: 'user_b',",
+              "                password: 'secret',",
+              "            }),",
+              "        }",
+              "    };",
+              "",
+              "    pm.sendRequest(loginUserRequest, (err, res) => {",
+              "        if (!err) {",
+              "            // insert access token of User B to accessTokenUserB env var",
+              "            const { data: { accessToken } } = res.json();",
+              "            pm.environment.set('accessTokenUserB', accessToken)",
+              "        }",
+              "    })",
+              "})"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
     }
   ]
 }
