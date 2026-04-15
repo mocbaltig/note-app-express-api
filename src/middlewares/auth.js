@@ -6,7 +6,7 @@ async function authenticateToken(req, res, next) {
 
   if (token && token.indexOf('Bearer ') !== -1) {
     try {
-      const user = TokenManager.verifyAccessToken(token.split('Bearer ')[1]);
+      const user = await TokenManager.verifyAccessToken(token.split('Bearer ')[1]);
       req.user = user;
       return next();
     } catch (err) {
