@@ -2540,6 +2540,906 @@
           }
         }
       ]
+    },
+    {
+      "name": "Collaborations",
+      "item": [
+        {
+          "name": "Adding Note using Owner user",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 201 (created) value', () => {",
+                  "    pm.response.to.have.status(201)",
+                  "})",
+                  "",
+                  "pm.test('response Content-Type should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8')",
+                  "})",
+                  "",
+                  "pm.test('response body should have id in data object', () => {",
+                  "    const responseJson = pm.response.json()",
+                  "    pm.expect(responseJson).to.be.an('object')",
+                  "",
+                  "    pm.expect(responseJson).to.ownProperty('data')",
+                  "    pm.expect(responseJson.data).to.be.an('object')",
+                  "",
+                  "    pm.expect(responseJson.data).to.ownProperty('id')",
+                  "    pm.expect(responseJson.data.id).to.be.a('string')",
+                  "",
+                  "    pm.environment.set('ownerNoteId', responseJson.data.id)",
+                  "})"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ownerAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan A\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari catatan A\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Adding Collaborator User as Collaborator to Added Note",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 201 value', () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should have collaborationId', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "    pm.expect(responseJson).to.have.ownProperty('data');",
+                  "    pm.expect(responseJson.data).to.be.an('object');",
+                  "    pm.expect(responseJson.data).to.have.ownProperty('collaborationId');",
+                  "    pm.expect(responseJson.data.collaborationId).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ownerAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"noteId\": \"{{ownerNoteId}}\",\n    \"userId\": \"{{collaboratorUserId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/collaborations",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "collaborations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting All Notes using Collaborator",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should contains notes array with 1 item', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "    pm.expect(responseJson).to.have.ownProperty('data');",
+                  "    pm.expect(responseJson.data).to.be.an('object');",
+                  "    pm.expect(responseJson.data).to.have.ownProperty('notes');",
+                  "    pm.expect(responseJson.data.notes).to.be.an('array');",
+                  "    pm.expect(responseJson.data.notes).to.have.lengthOf(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{collaboratorAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "localhost:3000/notes",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting Added Note using Collaborator User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{collaboratorAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "localhost:3000/notes/{{ownerNoteId}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{ownerNoteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Editing Added Note using Collaborator User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{collaboratorAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan A Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan A Revised by collaborator\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/notes/{{ownerNoteId}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{ownerNoteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Deleting Added Note using Collaborator User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body should contain correct value', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "    pm.expect(responseJson).to.have.ownProperty('status');",
+                  "    pm.expect(responseJson.status).to.equals('failed');",
+                  "    pm.expect(responseJson).to.have.ownProperty('message');",
+                  "    pm.expect(responseJson.message).to.equals('Anda tidak berhak mengakses resource ini');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{collaboratorAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "localhost:3000/notes/{{ownerNoteId}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{ownerNoteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Collaborator User from Collaborator to Added Note",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should contains correct value', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "    pm.expect(responseJson).to.have.ownProperty('status');",
+                  "    pm.expect(responseJson.status).to.equals('success');",
+                  "    pm.expect(responseJson).to.have.ownProperty('message');",
+                  "    pm.expect(responseJson.message).to.equals('Kolaborasi berhasil dihapus');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ownerAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"noteId\": \"{{ownerNoteId}}\",\n    \"userId\": \"{{collaboratorUserId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/collaborations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "collaborations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Adding Collaborator User as Collaborator to Added Note using Collaborator User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body should contain correct value', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('status');",
+                  "    pm.expect(responseJson.status).to.equals('fail');",
+                  "    ",
+                  "    pm.expect(responseJson).to.have.ownProperty('message');",
+                  "    pm.expect(responseJson.message).to.equals('Anda tidak berhak mengakses resource ini');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{collaboratorAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"noteId\": \"{{ownerNoteId}}\",\n    \"userId\": \"{{collaboratorUserId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/collaborations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "collaborations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting All Notes using Collaborator User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body data should contains notes array with 0 item', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('data');",
+                  "    pm.expect(responseJson.data).to.be.an('object');",
+                  "    ",
+                  "    pm.expect(responseJson.data).to.have.ownProperty('notes');",
+                  "    pm.expect(responseJson.data.notes).to.be.an('array');",
+                  "    pm.expect(responseJson.data.notes).to.have.lengthOf(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{collaboratorAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "localhost:3000/notes",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Getting Added Note using Collaborator User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "   pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "  pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body should contain correct value', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('status');",
+                  "    pm.expect(responseJson.status).to.equals('failed');",
+                  "    ",
+                  "    pm.expect(responseJson).to.have.ownProperty('message');",
+                  "    pm.expect(responseJson.message).to.equals('Anda tidak berhak mengakses resource ini');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{collaboratorAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/notes/{{ownerNoteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{ownerNoteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Editing Added Note using Collaborator User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 403 value', () => {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+                  "});",
+                  "",
+                  "pm.test('response body should contain correct value', () => {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('status');",
+                  "    pm.expect(responseJson.status).to.equals('failed');",
+                  "",
+                  "    pm.expect(responseJson).to.have.ownProperty('message');",
+                  "    pm.expect(responseJson.message).to.equals('Anda tidak berhak mengakses resource ini');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{collaboratorAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Catatan A Revised\",\n    \"tags\": [\n        \"Android\",\n        \"Web\"\n    ],\n    \"body\": \"Isi dari Catatan A Revised by collaborator\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/notes/{{ownerNoteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{ownerNoteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Deleting Added Note using Owner User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('response status code should have 200 value', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('response Content-Type header should have application/json value', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8')",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ownerAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:3000/notes/{{ownerNoteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "notes",
+                "{{ownerNoteId}}"
+              ]
+            }
+          }
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// create owner user",
+              "const createOwnerUserRequest = {",
+              "    url: 'http://localhost:3000/users',",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            username: 'owner_user',",
+              "            password: 'secret',",
+              "            fullname: 'Owner',",
+              "        }),",
+              "    },",
+              "};",
+              "",
+              "pm.sendRequest(createOwnerUserRequest, (error, response) => {",
+              "    console.log(error ? error : response);",
+              "    // after registered, login with Owner User",
+              "    const loginOwnerUserRequest = {",
+              "        url: 'http://localhost:3000/authentications',",
+              "        method: 'POST',",
+              "        header: {",
+              "            'Content-Type': 'application/json',",
+              "        },",
+              "        body: {",
+              "            mode: 'raw',",
+              "            raw: JSON.stringify({",
+              "                username: 'owner_user',",
+              "                password: 'secret',",
+              "            }),",
+              "        },",
+              "    };",
+              "    pm.sendRequest(loginOwnerUserRequest, (error, response) => {",
+              "        if (!error) {",
+              "            // insert Owner User's access token to env var",
+              "            const { data: { accessToken } } = response.json();",
+              "            pm.environment.set('ownerAccessToken', accessToken);",
+              "        }",
+              "    });",
+              "});",
+              "",
+              "// create Collaborator User",
+              "const createCollaboratorUserRequest = {",
+              "    url: 'http://localhost:3000/users',",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            username: 'collaborator_user',",
+              "            password: 'secret',",
+              "            fullname: 'Collaborator',",
+              "        }),",
+              "    },",
+              "};",
+              "",
+              "pm.sendRequest(createCollaboratorUserRequest, (error, response) => {",
+              "    console.log(error ? error : response);",
+              "    if (!error) {",
+              "        if (response.code === 201) {",
+              "            // insert collaborator user's id to env var",
+              "            const { data: { userId } } = response.json();",
+              "            pm.environment.set('collaboratorUserId', userId);",
+              "        }",
+              "    }",
+              "    // after registered, login with Collaborator User",
+              "    const loginCollaboratorUserRequest = {",
+              "        url: 'http://localhost:3000/authentications',",
+              "        method: 'POST',",
+              "        header: {",
+              "            'Content-Type': 'application/json',",
+              "        },",
+              "        body: {",
+              "            mode: 'raw',",
+              "            raw: JSON.stringify({",
+              "                username: 'collaborator_user',",
+              "                password: 'secret',",
+              "            }),",
+              "        },",
+              "    };",
+              "    pm.sendRequest(loginCollaboratorUserRequest, (error, response) => {",
+              "        if (!error) {",
+              "            // insert collaborator user's access token to env var",
+              "            const { data: { accessToken } } = response.json();",
+              "            pm.environment.set('collaboratorAccessToken', accessToken);",
+              "        }",
+              "    });",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
     }
   ]
 }
